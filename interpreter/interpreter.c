@@ -1518,7 +1518,7 @@ Value *subtract(Value *args, Environment *env)
         {
             if (isFloat)
             {
-                blDiff = 0 - dblDiff;
+                dblDiff = 0 - dblDiff;
             }
             else
             {
@@ -1622,7 +1622,7 @@ Value *multiply(Value *args, Environment *env)
             {
                 if (!isFloat)
                 {
-                    ntProd *= getFirst(args)->intValue;
+                    intProd *= getFirst(args)->intValue;
                 }
                 else
                 {
@@ -1968,7 +1968,7 @@ int interface(Environment *env)
             leftoverTokens->head = NULL;
             continue;
         }
-        parseTree = parse(tokens,&depth);
+        parseTree = parse(tokens, &depth);
 
         if (depth < 0)
         {
@@ -1987,7 +1987,7 @@ int interface(Environment *env)
             leftoverTokens->head = tokens->head;
             printf("..    ");
 
-            for (i=0;i<indentation;i++)
+            for (i=0; i<indentation; i++)
             {
                 printf(" ");
             }
