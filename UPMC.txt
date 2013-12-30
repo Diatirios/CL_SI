@@ -1,0 +1,5 @@
+The main bug is processed during a list reversing (reverse, value.c).
+In the list, a wrong value is inserted by a previous function.
+It can be interface (interpreter.c) or parse (parse.c) function.
+According to my searches, it must be parse which introduces the wrong value.
+On my computer, the value is 17 (0x11)
