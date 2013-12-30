@@ -1,0 +1,11 @@
+The interpreter is in the interpreter file. A makefile is present in the directory.
+
+Bug 1:
+The main bug is processed during a list reversing (reverse, value.c).
+In the list, a wrong value is inserted by a previous function.
+It can be interface (interpreter.c) or parse (parse.c) function.
+According to my searches, it must be parse which introduces the wrong value.
+On my computer, the value is 17 (0x11)
+
+Correction: A way to avoid this bug is to modify the reverse function. Unfortunately, the error is so strange that the only way is to add a condition into the while, forbidden the 17 value.
+Now, many tests using 'define' work and the interpreter does not crash !

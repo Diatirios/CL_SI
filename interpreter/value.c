@@ -436,11 +436,11 @@ int reverse(List *list)
     Value *nextValue;
     Value *tempHead=NULL;
     Value *curValue = list->head;
-    while (curValue && curValue->cons)
+    while (curValue && curValue->cons != 17)
     {
-        printf("curV:%d\n", curValue);
+        /*printf("curV:%d\n", curValue);
         printf("curV-cons:%d\n", curValue->cons);
-        printf("curV-cons-cdr:%d\n", curValue->cons->cdr);
+        printf("curV-cons-cdr:%d\n", curValue->cons->cdr);*/
         nextValue = curValue->cons->cdr;
         curValue->cons->cdr = tempHead;
         tempHead = curValue;
