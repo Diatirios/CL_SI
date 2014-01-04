@@ -145,6 +145,8 @@ List *tokenize(char *expression)
         // == GOING INTO THE SWITCH STATEMENT ==
         switch(expression[i]) // these are for chars and strings
         {
+        		case'\n':
+        			break;
             case '(':
                 // === USE ME === OPEN PARENS
                 while (isspace(expression[i+1]))
@@ -266,6 +268,7 @@ List *tokenize(char *expression)
     {
         return NULL;
     }
+
     reverse(list);
     return list;
 }

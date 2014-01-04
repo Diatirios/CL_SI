@@ -579,7 +579,9 @@ Value* evalEach(Value* args, Environment* env)
         }
     }
     assert(env!=NULL);
+
     reverse(returnValue);
+
     //insertItem(env->bindings->tableValue, "#returnValue", returnValue->head);
     //destroy(returnValue);
     //head = lookup(env->bindings->tableValue, "#returnValue");
@@ -1290,6 +1292,7 @@ Value* evalLambda(Value* args, Environment* env)
         }
 
         reverse(closure->args);
+
         toCheck = getTail(args);
         if (!toCheck)
         {
@@ -1418,7 +1421,7 @@ Environment *createFrame(Environment *parent)
 
 
 //! Arithmetic addition function. Integer and float addition are treated differently.
-Value *add(Value *args, Environment *env)
+Value *add(Value *args, Environment *env __attribute__((unused)))
 {
     int intSum = 0;
     double dblSum = 0;
@@ -1491,7 +1494,7 @@ Value *add(Value *args, Environment *env)
 }
 
 //! Arithmetic subtraction.
-Value *subtract(Value *args, Environment *env)
+Value *subtract(Value *args, Environment *env __attribute__((unused)))
 {
     int intDiff = 0;
     double dblDiff = 0;
@@ -1595,7 +1598,7 @@ Value *subtract(Value *args, Environment *env)
 }
 
 //! Arithmetic mutiplication.
-Value *multiply(Value *args, Environment *env)
+Value *multiply(Value *args, Environment *env __attribute__((unused)))
 {
     int intProd = 1;
     double dblProd = 1.0;
@@ -1670,7 +1673,7 @@ Value *multiply(Value *args, Environment *env)
  * Arithmetic division. We do not allow zero division
  * even though it is allowed in DrRacket that (/ 5 0.0)=>+inf.0
  */
-Value *divide(Value *args, Environment *env)
+Value *divide(Value *args, Environment *env __attribute__((unused)))
 {
     int intQuot = 1;
     double dblQuot = 1.0;
@@ -1825,8 +1828,8 @@ Value *loadFunction(Value *args, Environment *env)
     {
         FILE *fp;
         char *fileName = getFirst(args)->stringValue;
-        char *realName = NULL;
-        int i;
+        /*char *realName = NULL;
+        int i;*/
 
         // remove quotes around fileName
         fileName++;
@@ -1856,7 +1859,7 @@ int loadFromFile(FILE *file, Environment *env)
     int depth = 0;
     char *expression = (char *)malloc(256 * sizeof(char));
     Value* temp;
-    int i;
+/*    int i;*/
     // printf(">  ");
     while (fgets(expression, 256, file))
     {
@@ -1947,6 +1950,7 @@ int loadFromFile(FILE *file, Environment *env)
     destroy(leftoverTokens);
     free(tokens);
     free(expression);
+    return 0;
 }
 
 int interface(Environment *env)
@@ -1969,7 +1973,6 @@ int interface(Environment *env)
             continue;
         }
         parseTree = parse(tokens, &depth);
-
         if (depth < 0)
         {
             printf("Syntax error. Too many close parentheses.\n");   // Too many close parentheses.
@@ -2070,6 +2073,7 @@ int interface(Environment *env)
     destroy(leftoverTokens);
     free(tokens);
     free(expression);
+    return 0;
 }
 
 //! Special form And
@@ -2245,7 +2249,7 @@ Value *evalOr(Value *args, Environment *env)
 //! check the environment of the bindings
 Environment* checkEnv(char* id, Environment* env)
 {
-    Environment* returnEnv = env;
+/*    Environment* returnEnv = env;*/
     Value* returnValue = NULL;
     while (env)
     {
@@ -2324,7 +2328,7 @@ Value *evalSetBang(Value *args, Environment *env)
     }
 }
 
-Value *smallerOrEqualTo(Value *args, Environment *env)
+Value *smallerOrEqualTo(Value *args, Environment *env __attribute__((unused)))
 {
     assert(args->type == cellType);
     //check if input is valid
@@ -2332,6 +2336,7 @@ Value *smallerOrEqualTo(Value *args, Environment *env)
     if (count < 1)
     {
         printf("in <=: expect at least two arguments, given %d /n", count);
+        return NULL;
     }
     else
     {
@@ -2400,7 +2405,7 @@ Value *smallerOrEqualTo(Value *args, Environment *env)
     }
 }
 
-Value *greaterOrEqualTo(Value *args, Environment *env)
+Value *greaterOrEqualTo(Value *args, Environment *env __attribute__((unused)))
 {
     assert(args->type == cellType);
     //check the valid input
@@ -2408,6 +2413,7 @@ Value *greaterOrEqualTo(Value *args, Environment *env)
     if (count < 1)
     {
         printf("in >=: expect at least two arguments, given %d /n", count);
+        return NULL;
     }
     else
     {
@@ -2475,7 +2481,7 @@ Value *greaterOrEqualTo(Value *args, Environment *env)
     }
 }
 
-Value *greaterThan(Value *args, Environment *env)
+Value *greaterThan(Value *args, Environment *env __attribute__((unused)))
 {
     //check valid input
     assert(args->type == cellType);
@@ -2483,6 +2489,7 @@ Value *greaterThan(Value *args, Environment *env)
     if (count < 1)
     {
         printf("in >: expect at least two arguments, given %d /n", count);
+        return NULL;
     }
     else
     {
@@ -2553,7 +2560,7 @@ Value *greaterThan(Value *args, Environment *env)
 
 
 
-Value *smallerThan(Value *args, Environment *env)
+Value *smallerThan(Value *args, Environment *env __attribute__((unused)))
 {
     //check if input is valid
     assert(args->type == cellType);
@@ -2561,6 +2568,7 @@ Value *smallerThan(Value *args, Environment *env)
     if (count < 1)
     {
         printf("in <: expect at least two arguments, given %d /n", count);
+        return NULL;
     }
     else
     {
@@ -2632,7 +2640,7 @@ Value *smallerThan(Value *args, Environment *env)
 
 
 //! arithmetic equality check
-Value *arithmeticEqual(Value *args, Environment *env)
+Value *arithmeticEqual(Value *args, Environment *env __attribute__((unused)))
 {
     if (!(args && (args->type == cellType)))
         return NULL;
@@ -2792,7 +2800,7 @@ Value *equality(Value *args, Environment *env)
 
     int count = listLength(args);
 
-    if (count = 0)
+    if (count == 0)
     {
         printf("equal?: expects two arguments, given 0\n");
         return NULL;
@@ -2834,7 +2842,7 @@ Value *equality(Value *args, Environment *env)
 }
 
 //! not finished yet.
-Value *exponentiate(Value *args, Environment *env){
+Value *exponentiate(Value *args __attribute__((unused)), Environment *env __attribute__((unused))){
     return NULL;
 }
 
@@ -2898,7 +2906,7 @@ Value* checkNull(Value *value, Environment *env)
 {
     assert(env!=NULL);
     int count = listLength(value);
-    Value *toCheck;
+/*    Value *toCheck;*/
     Value *current;
     Value *returnValue = (Value *)malloc(sizeof(Value));
 
