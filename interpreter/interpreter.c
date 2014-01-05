@@ -408,7 +408,11 @@ int variableCheck(Value* value)
                 strcmp(value->symbolValue,">")==0 ||
                 strcmp(value->symbolValue,"car")==0 ||
                 strcmp(value->symbolValue,"cdr")==0 ||
-                strcmp(value->symbolValue,"cons")==0)
+                strcmp(value->symbolValue,"cons")==0 ||
+                strcmp(value->symbolValue,"iterator")==0 ||
+                strcmp(value->symbolValue,"hasnext")==0 ||
+                strcmp(value->symbolValue,"next")==0 ||
+                strcmp(value->symbolValue,"current")==0)
             {
                 return 0;
             }
@@ -472,7 +476,7 @@ Value* evalDefine(Value* args, Environment* env)
         Value *value;
         if (getFirst(getTail(args)) && getFirst(getTail(args))->type == symbolType)
         {
-        value = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
+            value = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
 
             if (value)
             {
@@ -1354,6 +1358,12 @@ Environment *createTopFrame()
     Value *null = (Value *)malloc(sizeof(Value));
     null->type = nullType;
     bind("null", null, frame);
+    /*** UPMC ***/
+    bind("iterator", makePrimitiveValue(iterator), frame);
+    bind("hasnext", makePrimitiveValue(hasnext), frame);
+    bind("next", makePrimitiveValue(next), frame);
+    bind("current", makePrimitiveValue(current), frame);
+    /*** UPMC-end ***/
     return frame;
 }
 
@@ -2948,4 +2958,291 @@ Value* checkNull(Value *value, Environment *env)
     }
     return NULL;
 }
+
+Value *iterator(Value *args, Environment *env)
+{
+    Value *value = NULL;
+    int count = listLength(args);
+
+    if (count > 1)
+    {
+        printf("iterator:expects 1 argument, given %d.\n", count);
+        return NULL;
+    }
+    else if (count < 1)
+    {
+        printf("iterator: expects argument of type <pair>.\n");
+        return NULL;
+    }
+
+    /*if (variableCheck(getFirst(args)) < 1)
+    {
+        if (variableCheck(getFirst(args)) < 0)
+        {
+            printf("iterator bad syntax\n");
+            return value;
+        }
+        else
+        {
+            printf("cannot change constant variable\n");
+            return value;
+        }
+    }
+    else*/
+    {
+        // now it has correct number of arguments and the identifier is valid.
+        // eval the second argument and put (1st, 2nd) as key-value pair in the hash table.
+
+        assert(env!=NULL);
+        assert(env->bindings->type == tableType);
+
+        assert(args->type==cellType);
+        assert(getFirst(args)!=NULL);
+        assert(getFirst(args)->type == cellType);
+        Value *valueList;
+        if (getFirst(args) && getFirst(args)->type == cellType)
+        {
+            valueList = eval(envLookup(getFirst(args)->symbolValue, env), env);
+
+            if (valueList)
+            {
+                if (valueList->type == cellType)
+                {
+                    value = (Value *)malloc(sizeof(Value));
+                    value->type = iteratorType;
+                    value->iteratorValue->args = valueList;
+                    value->iteratorValue->pointed = 0;
+                    insertItem(env->bindings->tableValue, (getFirst(args))->symbolValue, value);
+                    printf("%p\n", getFirst((args)));
+                    printf("%d\n", getFirst(args)->type);
+                }
+            }
+            else
+            {
+                printf("syntax error: unknown identifier\n");
+                return value;
+            }
+        }
+        return value;
+    }
+}
+
+Value *hasnext(Value *args, Environment *env)
+{
+    if (args == NULL||args->cons->cdr== NULL)
+    {
+        printf("syntax error: missing components here\n");
+        return NULL;
+    }
+    assert(args->type == cellType);
+
+    //check if there are more than 1 values after iterator
+    if (listLength(args) > 1)
+    {
+        printf("syntax error: multiple expressions after identifier\n");
+        return NULL;
+    }
+
+    if (variableCheck(getFirst(args)) < 1)
+    {
+        if (variableCheck(getFirst(args)) < 0)
+        {
+            printf("bad syntax\n");
+            return NULL;
+        }
+        else
+        {
+            printf("cannot change constant variable\n");
+            return NULL;
+        }
+    }
+    else
+    {
+        // now it has correct number of arguments and the identifier is valid.
+        // eval the second argument and put (1st, 2nd) as key-value pair in the hash table.
+
+        assert(env!=NULL);
+        assert(env->bindings->type == tableType);
+
+        /*assert(args->type==cellType);*/
+        assert(getFirst(args)!=NULL);
+        assert(getFirst(args)->type == symbolType);
+        Value *value;
+        if (getFirst(getTail(args)))
+        {
+            value = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
+
+            if (value)
+            {
+                if (value->type == iteratorType)
+                {
+                    List* liste = value->iteratorValue->args;
+                    int recurs = value->iteratorValue->pointed;
+                    int i = 0;
+                    ConsCell *consCell = liste->head->cons;
+
+                    while (i < recurs)
+                    {
+                        consCell = consCell->cdr->cons;
+                        i++;
+                    }
+                    Value* boolean = (Value *)malloc(sizeof(Value));
+                    boolean->type = booleanType;
+                    boolean->boolValue = (consCell->cdr != NULL);
+                    return boolean;
+                }
+            }
+            else
+            {
+                printf("syntax error: unknown identifier\n");
+                return NULL;
+            }
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+}
+
+Value *next(Value *args, Environment *env)
+{
+    if (args == NULL||args->cons->cdr== NULL)
+    {
+        printf("syntax error: missing components here\n");
+        return NULL;
+    }
+    assert(args->type == cellType);
+
+    //check if there are more than 1 values after iterator
+    if (listLength(args) > 1)
+    {
+        printf("syntax error: multiple expressions after identifier\n");
+        return NULL;
+    }
+
+    if (variableCheck(getFirst(args)) < 1)
+    {
+        if (variableCheck(getFirst(args)) < 0)
+        {
+            printf("bad syntax\n");
+            return NULL;
+        }
+        else
+        {
+            printf("cannot change constant variable\n");
+            return NULL;
+        }
+    }
+    else
+    {
+        // now it has correct number of arguments and the identifier is valid.
+        // eval the second argument and put (1st, 2nd) as key-value pair in the hash table.
+
+        assert(env!=NULL);
+        assert(env->bindings->type == tableType);
+
+        /*assert(args->type==cellType);*/
+        assert(getFirst(args)!=NULL);
+        assert(getFirst(args)->type == symbolType);
+        Value *value;
+        if (getFirst(getTail(args)))
+        {
+            value = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
+
+            if (value)
+            {
+                if (value->type == iteratorType)
+                {
+                    value->iteratorValue->pointed++;
+                }
+            }
+            else
+            {
+                printf("syntax error: unknown identifier\n");
+                return NULL;
+            }
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+}
+
+Value *current(Value *args, Environment *env)
+{
+    if (args == NULL||args->cons->cdr== NULL)
+    {
+        printf("syntax error: missing components here\n");
+        return NULL;
+    }
+    assert(args->type == cellType);
+
+    //check if there are more than 1 values after iterator
+    if (listLength(args) > 1)
+    {
+        printf("syntax error: multiple expressions after identifier\n");
+        return NULL;
+    }
+
+    if (variableCheck(getFirst(args)) < 1)
+    {
+        if (variableCheck(getFirst(args)) < 0)
+        {
+            printf("bad syntax\n");
+            return NULL;
+        }
+        else
+        {
+            printf("cannot change constant variable\n");
+            return NULL;
+        }
+    }
+    else
+    {
+        // now it has correct number of arguments and the identifier is valid.
+        // eval the second argument and put (1st, 2nd) as key-value pair in the hash table.
+
+        assert(env!=NULL);
+        assert(env->bindings->type == tableType);
+
+        /*assert(args->type==cellType);*/
+        assert(getFirst(args)!=NULL);
+        assert(getFirst(args)->type == symbolType);
+        Value *value;
+        if (getFirst(getTail(args)))
+        {
+            value = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
+
+            if (value)
+            {
+                if (value->type == iteratorType)
+                {
+                    List* liste = value->iteratorValue->args;
+                    int recurs = value->iteratorValue->pointed;
+                    int i = 0;
+                    ConsCell *consCell = liste->head->cons;
+
+                    while (i < recurs)
+                    {
+                        consCell = consCell->cdr->cons;
+                        i++;
+                    }
+                    return consCell->car;
+                }
+            }
+            else
+            {
+                printf("syntax error: unknown identifier\n");
+                return NULL;
+            }
+        }
+        else
+        {
+            return NULL;
+        }
+    }
+}
+
 

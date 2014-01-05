@@ -3,7 +3,7 @@
  */
 
 enum VALUE_TYPE{
-  nullType, tableType, cellType, errorType, booleanType, integerType, floatType, stringType, symbolType, openType, closeType, closureType, envType, primitiveType
+  nullType, tableType, cellType, errorType, booleanType, integerType, floatType, stringType, symbolType, openType, closeType, closureType, envType, primitiveType, iteratorType
 };
 
 typedef struct __Environment{
@@ -26,6 +26,7 @@ typedef struct __Value{
     struct __Value* (*primitiveValue)(struct __Value *, struct __Environment *);
     struct __Environment* envValue;
     struct __HashTable *tableValue;
+    struct __Iterator *iteratorValue;
   };
 } Value;
 
@@ -39,6 +40,11 @@ typedef struct __ConsCell{
 typedef struct __LinkedList{
   struct __Value *head;
 } List;
+
+typedef struct __Iterator{
+    struct __LinkedList* args;
+    int pointed;
+} Iterator;
 
 //! This function initializes a linked list. It will assign head as NULL.
 List* initializeList();

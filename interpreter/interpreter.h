@@ -97,3 +97,13 @@ char* intToString(int number);
 
 Value* checkNull(Value *value, Environment *env);
 
+/*** UPMC ***/
+//! Creates an iterator on a list
+Value *iterator(Value *args, Environment *env);
+//! Tests the presence of the next value in the list
+Value *hasnext(Value *args, Environment *env);
+//! The iterator points to the next value
+Value *next(Value *args, Environment *env);
+//! Returns the value pointed in the list
+Value *current(Value *args, Environment *env);
+/*** UPMC-end ***/

@@ -1,4 +1,4 @@
-The interpreter is in the interpreter file. A makefile is present in the directory.
+The interpreter is in the interpreter directory. A makefile is present in the directory.
 
 Bug 1:
 The main bug is processed during a list reversing (reverse, value.c).
@@ -9,3 +9,10 @@ On my computer, the value is 17 (0x11)
 
 Correction: A way to avoid this bug is to modify the reverse function. Unfortunately, the error is so strange that the only way is to add a condition into the while, forbidden the 17 value.
 Now, many tests using 'define' work and the interpreter does not crash !
+
+
+List iterator
+(let myIterator (iterator list))
+hasNext(myIterator) : Boolean - Return true if there is a next value
+currentValue(myIterator) : Value - Return the current value pointed by the iterator
+nextValue(myIterator) : NULL - The iterator points to the next value
