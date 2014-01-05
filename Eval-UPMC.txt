@@ -10,6 +10,9 @@ On my computer, the value is 17 (0x11)
 Correction: A way to avoid this bug is to modify the reverse function. Unfortunately, the error is so strange that the only way is to add a condition into the while, forbidden the 17 value.
 Now, many tests using 'define' work and the interpreter does not crash !
 
+Correction 2: The 17 (0x11) value is not important because it's the value saved in the union but we don't know of which type it is, 
+when the function reverse the list it does not check if the current value's type is always cellType. 
+Sometimes it's nullType or an undetermined type and that cause the crash. Know the function check it.
 
 List iterator
 (let myIterator (iterator list))

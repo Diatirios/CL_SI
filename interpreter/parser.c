@@ -22,6 +22,7 @@ List* parse(List* tokens, int* depth)
     List* stack = initializeList();
     List* tempList = initializeList();
     *depth = 0;
+
     while (tokens->head)
     {
         if (tokens->head->cons->car->type == openType)

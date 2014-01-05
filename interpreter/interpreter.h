@@ -62,6 +62,8 @@ Value *divide(Value *args, Environment *env);
 //! loads a file into the interpreter
 //! file must be an open FILE
 int loadFromFile(FILE *file, Environment *env);
+//! function interface
+int interface(Environment *env);
 //! evaluates an "and" expression
 Value *evalAnd(Value *args, Environment *env);
 //! evaluates a "cond" special form

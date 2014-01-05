@@ -141,10 +141,11 @@ int hash(HashTable* table, char* id)
 {
     if (table)
     {
-        int key = 0,index=0, startingPoint;
-        while (id[index]!='\0')
+        int key = 0,index_=0, startingPoint;
+        while (id[index_]!='\0')
         {
-            key += (id[index++]) * index;
+            key += (id[index_]) * index_;
+            index_++;
         }
         startingPoint = key;
         Value* current = ((table->entries)[key%(table->capacity)]).car;
@@ -436,11 +437,11 @@ int reverse(List *list)
     Value *nextValue;
     Value *tempHead=NULL;
     Value *curValue = list->head;
-    while (curValue && curValue->cons != 17)
+    while (curValue && curValue->type == cellType)
     {
-        /*printf("curV:%d\n", curValue);
-        printf("curV-cons:%d\n", curValue->cons);
-        printf("curV-cons-cdr:%d\n", curValue->cons->cdr);*/
+        /*printf("curV:%p\n", curValue);
+        printf("curV-cons:%p\n", curValue->cons);
+        printf("curV-cons-cdr:%p\n", curValue->cons->cdr);*/
         nextValue = curValue->cons->cdr;
         curValue->cons->cdr = tempHead;
         tempHead = curValue;
@@ -651,7 +652,7 @@ void destroy(List* list)
 /**
  * This returns the car of a value (that is a list)
  */
-Value *car(Value *value, Environment *env)
+Value *car(Value *value, Environment *env __attribute__((unused)))
 {
     Value *current = value;
     int count = listLength(value);
@@ -841,11 +842,12 @@ Value *cdr(Value *value, Environment *env)
  */
 Value *cons(Value *value, Environment *env)
 {
-    Value *openParen, *closeParen;
+    Value *openParen;
+/*    Value *closeParen;*/
     Value *newValue;
     Value *newCar,  *newCdr;
     Value *carCdr;
-    Value *endCdr;
+/*    Value *endCdr;*/
     Value *carCopy, *cdrCopy;
 
     int count = listLength(value);

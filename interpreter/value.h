@@ -271,3 +271,6 @@ int isProperListRec(Value *value);
 
 //! inserts a value into the environment, parent
 Value* insertValueToEnv(Value *toInsert,Environment *parent);
+
+//! checks types for the interpreter
+int typeCheck(Value* value);
