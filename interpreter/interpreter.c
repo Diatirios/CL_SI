@@ -3011,23 +3011,25 @@ Value *iterator(Value *args, Environment *env)
         if (getFirst(args) && getFirst(args)->type == cellType)
         {
             valueList = eval(envLookup(getFirst(args)->symbolValue, env), env);
+            //printValue(valueList);
 
-            if (valueList)
+            if (valueList != NULL)
             {
-                if (valueList->type == cellType)
+                    printf("%p\n", getFirst((args)));
+                    printf("%d\n", getFirst(args)->type);
+                /*if (valueList->type == cellType)
                 {
                     value = (Value *)malloc(sizeof(Value));
                     value->type = iteratorType;
-                    value->iteratorValue->args = valueList;
-                    value->iteratorValue->pointed = 0;
+                    value->iteratorValue->cell = valueList->cons;
                     insertItem(env->bindings->tableValue, (getFirst(args))->symbolValue, value);
                     printf("%p\n", getFirst((args)));
                     printf("%d\n", getFirst(args)->type);
-                }
+                }*/
             }
             else
             {
-                printf("syntax error: unknown identifier\n");
+                printf("syntax error: unknown iterator identifier\n");
                 return value;
             }
         }
@@ -3084,19 +3086,9 @@ Value *hasnext(Value *args, Environment *env)
             {
                 if (value->type == iteratorType)
                 {
-                    List* liste = value->iteratorValue->args;
-                    int recurs = value->iteratorValue->pointed;
-                    int i = 0;
-                    ConsCell *consCell = liste->head->cons;
-
-                    while (i < recurs)
-                    {
-                        consCell = consCell->cdr->cons;
-                        i++;
-                    }
                     Value* boolean = (Value *)malloc(sizeof(Value));
                     boolean->type = booleanType;
-                    boolean->boolValue = (consCell->cdr != NULL);
+                    boolean->boolValue = (value->iteratorValue->cell->cdr != NULL);
                     return boolean;
                 }
             }
@@ -3106,11 +3098,8 @@ Value *hasnext(Value *args, Environment *env)
                 return NULL;
             }
         }
-        else
-        {
-            return NULL;
-        }
     }
+    return NULL;
 }
 
 Value *next(Value *args, Environment *env)
@@ -3162,7 +3151,7 @@ Value *next(Value *args, Environment *env)
             {
                 if (value->type == iteratorType)
                 {
-                    value->iteratorValue->pointed++;
+                    value->iteratorValue->cell = value->iteratorValue->cell->cdr->cons;
                 }
             }
             else
@@ -3171,11 +3160,8 @@ Value *next(Value *args, Environment *env)
                 return NULL;
             }
         }
-        else
-        {
-            return NULL;
-        }
     }
+    return NULL;
 }
 
 Value *current(Value *args, Environment *env)
@@ -3227,17 +3213,7 @@ Value *current(Value *args, Environment *env)
             {
                 if (value->type == iteratorType)
                 {
-                    List* liste = value->iteratorValue->args;
-                    int recurs = value->iteratorValue->pointed;
-                    int i = 0;
-                    ConsCell *consCell = liste->head->cons;
-
-                    while (i < recurs)
-                    {
-                        consCell = consCell->cdr->cons;
-                        i++;
-                    }
-                    return consCell->car;
+                    return value->iteratorValue->cell->car;
                 }
             }
             else
@@ -3246,11 +3222,8 @@ Value *current(Value *args, Environment *env)
                 return NULL;
             }
         }
-        else
-        {
-            return NULL;
-        }
     }
+    return NULL;
 }
 
 
