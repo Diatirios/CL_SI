@@ -453,7 +453,7 @@ Value* evalDefine(Value* args, Environment* env)
     {
         if (variableCheck(getFirst(args)) < 0)
         {
-            printf("bad syntax\n");
+            printf("define bad syntax\n");
             return NULL;
         }
         else
@@ -988,7 +988,7 @@ Value* evalLetStar(Value* originalArgs, Environment* env)
 
 Value* evalLetrec(Value* originalArgs, Environment* env)
 {
-    Value *toCheck,  *toBind;
+    Value *toCheck,  *toBind = NULL;
     int count = listLength(originalArgs);
 
     if (count < 2)
@@ -1864,7 +1864,7 @@ Value *loadFunction(Value *args, Environment *env)
 
 int loadFromFile(FILE *file, Environment *env)
 {
-    List *tokens, *parseTree, *leftoverTokens = NULL;
+    List *tokens = NULL, *parseTree, *leftoverTokens = NULL;
     leftoverTokens = initializeList();
     int depth = 0;
     char *expression = (char *)malloc(256 * sizeof(char));
@@ -1965,7 +1965,7 @@ int loadFromFile(FILE *file, Environment *env)
 
 int interface(Environment *env)
 {
-    List *tokens, *parseTree, *leftoverTokens = NULL;
+    List *tokens = NULL, *parseTree, *leftoverTokens = NULL;
     leftoverTokens = initializeList();
     int depth = 0;
     int indentation = 0;
@@ -3010,22 +3010,18 @@ Value *iterator(Value *args, Environment *env)
         Value *valueList;
         if (getFirst(args) && getFirst(args)->type == cellType)
         {
-            valueList = eval(envLookup(getFirst(args)->symbolValue, env), env);
-            //printValue(valueList);
+            valueList = getFirst(args);
 
             if (valueList != NULL)
             {
-                    printf("%p\n", getFirst((args)));
-                    printf("%d\n", getFirst(args)->type);
-                /*if (valueList->type == cellType)
+                if (valueList->type == cellType)
                 {
                     value = (Value *)malloc(sizeof(Value));
                     value->type = iteratorType;
+                    value->iteratorValue = (Iterator*) malloc(sizeof(Iterator));
                     value->iteratorValue->cell = valueList->cons;
-                    insertItem(env->bindings->tableValue, (getFirst(args))->symbolValue, value);
-                    printf("%p\n", getFirst((args)));
-                    printf("%d\n", getFirst(args)->type);
-                }*/
+                    return value;
+                }
             }
             else
             {
@@ -3039,9 +3035,9 @@ Value *iterator(Value *args, Environment *env)
 
 Value *hasnext(Value *args, Environment *env)
 {
-    if (args == NULL||args->cons->cdr== NULL)
+    if (args == NULL)
     {
-        printf("syntax error: missing components here\n");
+        printf("hasnext syntax error: missing components here\n");
         return NULL;
     }
     assert(args->type == cellType);
@@ -3053,7 +3049,7 @@ Value *hasnext(Value *args, Environment *env)
         return NULL;
     }
 
-    if (variableCheck(getFirst(args)) < 1)
+    /*if (variableCheck(getFirst(args)) < 1)
     {
         if (variableCheck(getFirst(args)) < 0)
         {
@@ -3066,7 +3062,7 @@ Value *hasnext(Value *args, Environment *env)
             return NULL;
         }
     }
-    else
+    else*/
     {
         // now it has correct number of arguments and the identifier is valid.
         // eval the second argument and put (1st, 2nd) as key-value pair in the hash table.
@@ -3078,9 +3074,9 @@ Value *hasnext(Value *args, Environment *env)
         assert(getFirst(args)!=NULL);
         assert(getFirst(args)->type == symbolType);
         Value *value;
-        if (getFirst(getTail(args)))
+        if (getFirst(args))
         {
-            value = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
+            value = getFirst(args);//eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
 
             if (value)
             {
