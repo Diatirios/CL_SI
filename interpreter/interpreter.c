@@ -505,7 +505,7 @@ Value* evalDefine(Value* args, Environment* env)
             assert(getFirst(args)->type==symbolType);
             assert(env->bindings->tableValue!=NULL);
             value = eval(getFirst(getTail(args)), env);
-            
+
             if (value)
             {
                 if (value->type == closureType)
@@ -3012,7 +3012,7 @@ Value *iterator(Value *args, Environment *env)
         assert(args->type==cellType);
         assert(getFirst(args)!=NULL);
         assert(getFirst(args)->type == cellType || getFirst(args)->type == symbolType);
-        
+
         Value *valueList = NULL;
         if(getFirst(args)->type == symbolType){
         		valueList = envLookup(getFirst(args)->symbolValue,env);
@@ -3156,9 +3156,10 @@ Value *next(Value *args, Environment *env)
 
             if (value)
             {
-                if (value->type == iteratorType)
+                if (value->type == iteratorType && value->iteratorValue->cell != NULL)
                 {
-                    value->iteratorValue->cell = value->iteratorValue->cell->cdr->cons;
+                    if (value->iteratorValue->cell->type == cellType)
+                        value->iteratorValue->cell = value->iteratorValue->cell->cons->cdr;
                 }
             }
             else
@@ -3218,9 +3219,11 @@ Value *current(Value *args, Environment *env)
 
             if (value)
             {
-                if (value->type == iteratorType)
+                if (value->type == iteratorType
+                    && value->iteratorValue->cell != NULL
+                    && value->iteratorValue->cell->type == cellType)
                 {
-                    return value->iteratorValue->cell->car;
+                    return value->iteratorValue->cell->cons->car;
                 }
             }
             else
