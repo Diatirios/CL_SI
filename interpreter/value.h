@@ -42,7 +42,7 @@ typedef struct __LinkedList{
 } List;
 
 typedef struct __Iterator{
-    struct __ConsCell* cell;
+    struct __Value* cell;
 } Iterator;
 
 //! This function initializes a linked list. It will assign head as NULL.

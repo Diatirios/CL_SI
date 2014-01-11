@@ -3028,7 +3028,7 @@ Value *iterator(Value *args, Environment *env)
             	value = (Value *)malloc(sizeof(Value));
                value->type = iteratorType;
                value->iteratorValue = (Iterator*) malloc(sizeof(Iterator));
-               value->iteratorValue->cell = valueList->cons;
+               value->iteratorValue->cell = valueList;
                return value;
             }
         }
