@@ -3042,7 +3042,7 @@ Value *hasnext(Value *args, Environment *env)
     }
     assert(args->type == cellType);
 
-    //check if there are more than 1 values after iterator
+    //check if there are more than 1 values after hasnext
     if (listLength(args) > 1)
     {
         printf("syntax error: multiple expressions after identifier\n");
@@ -3076,7 +3076,10 @@ Value *hasnext(Value *args, Environment *env)
         Value *value;
         if (getFirst(args))
         {
-            value = getFirst(args);//eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
+            value = getFirst(args);
+            Value* val = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
+            printf("value:%p\n", value);
+            printf("val__:%p\n", val);
 
             if (value)
             {

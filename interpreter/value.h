@@ -3,7 +3,7 @@
  */
 
 enum VALUE_TYPE{
-  nullType, tableType, cellType, errorType, booleanType, integerType, floatType, stringType, symbolType, openType, closeType, closureType, envType, primitiveType, iteratorType
+  nullType = 0, tableType = 1, cellType = 2, errorType = 3, booleanType = 4, integerType = 5, floatType = 6, stringType = 7, symbolType = 8, openType = 9, closeType = 10, closureType = 11, envType = 12, primitiveType = 13, iteratorType = 14
 };
 
 typedef struct __Environment{
@@ -234,6 +234,8 @@ Value* deepCopyFun(Value *function);
 Value *deepCopyEnv(Value * value);
 
 Value *deepCopyTable(Value * value);
+
+Value *deepCopyIterator(Value *value);
 
 /**
  * recursively. frees a value
