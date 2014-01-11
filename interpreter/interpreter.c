@@ -3095,7 +3095,7 @@ Value *hasnext(Value *args, Environment *env)
                 {
                     Value* boolean = (Value *)malloc(sizeof(Value));
                     boolean->type = booleanType;
-                    boolean->boolValue = (value->iteratorValue->cell->cdr != NULL);
+                    boolean->boolValue = (value->iteratorValue->cell->cons != NULL && value->iteratorValue->cell->cons->cdr != NULL);
                     return boolean;
                 }
             }
