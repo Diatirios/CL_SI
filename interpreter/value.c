@@ -210,9 +210,10 @@ int insertItem(HashTable* table, char* id, Value* value)
         {
             freeValue((table->entries)[key].cdr);
         }
+    		
         (table->entries)[key].car = keyVal;
         (table->entries)[key].cdr = deepCopy(value);
-
+				
         (table->size)++;
         return 1;
     }
@@ -1332,6 +1333,7 @@ Value* deepCopy(Value *value)
             case iteratorType:
                 free(newValue);
                 newValue = deepCopyIterator(value);
+                break;
             default:
                 return NULL;
                 break;
