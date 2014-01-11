@@ -44,6 +44,10 @@ void printToken(Value* curValue)
                 break;
             case nullType:
                 printf("()");
+                break;
+            case iteratorType:
+                printf("Iterator type\n");
+                break;
             default:
                 break;
         }
@@ -110,6 +114,9 @@ void printValue(Value *curValue)
                 break;
             case envType:
                 printf("Environment");
+                break;
+            case iteratorType:
+                printf("Iterator");
                 break;
             default:
                 break;
@@ -1008,6 +1015,9 @@ void printList(Value* value)
                 case primitiveType:
                     printf("#<procedure>");
                     break;
+                case iteratorType:
+                    printf("iterator");
+                    break;
                 default:
                     break;
             }
@@ -1073,7 +1083,8 @@ int listLength(Value *value)
     if (isProperList(value))
     {
         return properListLength(value);
-    } else
+    }
+    else
     {
         return improperListLength(value);
     }
@@ -1182,6 +1193,10 @@ Value *deepCopyList(Value *value)
             case closureType:
                 free(newValue);
                 newValue = deepCopyFun(head->cons->car);
+                break;
+            case iteratorType:
+                free(newValue);
+                newValue = deepCopyIterator(head->cons->car);
                 break;
             default:
                 break;
@@ -1314,6 +1329,9 @@ Value* deepCopy(Value *value)
                 free(newValue);
                 newValue = deepCopyTable(value);
                 break;
+            case iteratorType:
+                free(newValue);
+                newValue = deepCopyIterator(value);
             default:
                 return NULL;
                 break;
@@ -1356,6 +1374,18 @@ Value *deepCopyTable(Value * value)
     return returnValue;
 }
 
+Value *deepCopyIterator(Value *value)
+{
+    assert(value != NULL);
+    assert(value->type == iteratorType);
+
+    Value *returnValue = (Value*) malloc(sizeof(Value));
+    returnValue->type = iteratorType;
+    returnValue->iteratorValue = (Iterator*) malloc(sizeof(Iterator));
+    returnValue->iteratorValue->cell = deepCopyList(value->iteratorValue->cell);
+    return returnValue;
+}
+
 Closure *initializeClosure(Environment* env)
 {
     Closure *closure = (Closure *)malloc(sizeof(Closure));
@@ -1395,7 +1425,8 @@ void destroyClosure(Closure *closure)
 //! name the closure for comparision purpose.
 void nameClosure(Closure *closure, char *id)
 {
-    if (closure){
+    if (closure)
+    {
         if (closure->identifier!=NULL)
         {
             free(closure->identifier);
@@ -1512,7 +1543,7 @@ void destroyTopFrame(Environment *env)
     ConsCell *entry;
     char *id;
 
-    for (i = subEnvCounter->intValue ;i>=0;i--)
+    for (i = subEnvCounter->intValue; i>=0; i--)
     {
         id = intToString(i);
 
