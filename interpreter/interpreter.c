@@ -3078,16 +3078,12 @@ Value *hasnext(Value *args, Environment *env)
         assert(env!=NULL);
         assert(env->bindings->type == tableType);
 
-        /*assert(args->type==cellType);*/
         assert(getFirst(args)!=NULL);
-        assert(getFirst(args)->type == symbolType);
+        assert(getFirst(args)->type == iteratorType);
         Value *value;
         if (getFirst(args))
         {
             value = getFirst(args);
-            Value* val = eval(envLookup(getFirst(getTail(args))->symbolValue, env), env);
-            printf("value:%p\n", value);
-            printf("val__:%p\n", val);
 
             if (value)
             {
