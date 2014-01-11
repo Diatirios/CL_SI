@@ -136,6 +136,10 @@ Value* eval(Value *expr, Environment *env)
                     {
                         return evalSetBang(args, env);
                     }
+                	  else if (strcmp(operator->symbolValue,"iterator")==0)
+                    {
+                        return iterator(args, env);
+                    }
                     else if(strcmp(operator->symbolValue, "load") == 0)
                     {
                         while (env && env->parent)
@@ -501,6 +505,7 @@ Value* evalDefine(Value* args, Environment* env)
             assert(getFirst(args)->type==symbolType);
             assert(env->bindings->tableValue!=NULL);
             value = eval(getFirst(getTail(args)), env);
+            
             if (value)
             {
                 if (value->type == closureType)
@@ -3006,28 +3011,31 @@ Value *iterator(Value *args, Environment *env)
 
         assert(args->type==cellType);
         assert(getFirst(args)!=NULL);
-        assert(getFirst(args)->type == cellType);
-        Value *valueList;
-        if (getFirst(args) && getFirst(args)->type == cellType)
+        assert(getFirst(args)->type == cellType || getFirst(args)->type == symbolType);
+        
+        Value *valueList = NULL;
+        if(getFirst(args)->type == symbolType){
+        		valueList = envLookup(getFirst(args)->symbolValue,env);
+        }
+        else if (getFirst(args) && getFirst(args)->type == cellType)
         {
             valueList = getFirst(args);
-
-            if (valueList != NULL)
+			}
+        if (valueList != NULL)
+        {
+        		if (valueList->type == cellType)
             {
-                if (valueList->type == cellType)
-                {
-                    value = (Value *)malloc(sizeof(Value));
-                    value->type = iteratorType;
-                    value->iteratorValue = (Iterator*) malloc(sizeof(Iterator));
-                    value->iteratorValue->cell = valueList->cons;
-                    return value;
-                }
+            	value = (Value *)malloc(sizeof(Value));
+               value->type = iteratorType;
+               value->iteratorValue = (Iterator*) malloc(sizeof(Iterator));
+               value->iteratorValue->cell = valueList->cons;
+               return value;
             }
-            else
-            {
+        }
+        else
+        {
                 printf("syntax error: unknown iterator identifier\n");
                 return value;
-            }
         }
         return value;
     }

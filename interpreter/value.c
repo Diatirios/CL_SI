@@ -205,6 +205,7 @@ int insertItem(HashTable* table, char* id, Value* value)
         }
         (table->entries)[key].car = keyVal;
         (table->entries)[key].cdr = deepCopy(value);
+
         (table->size)++;
         return 1;
     }
