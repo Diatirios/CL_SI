@@ -964,64 +964,7 @@ void printList(Value* value)
                 return;
             }
 
-            switch (curValue->cons->car->type)
-            {
-                case booleanType:
-                    if(curValue->cons->car->boolValue)
-                    {
-                        printf("#t");
-                    }
-                    else
-                    {
-                        printf("#f");
-                    }
-                    break;
-                case integerType:
-                    printf("%d",curValue->cons->car->intValue);
-                    break;
-                case floatType:
-                    printf("%lf",curValue->cons->car->dblValue);
-                    break;
-                case stringType:
-                    printf("%s",curValue->cons->car->stringValue);
-                    break;
-                case symbolType:
-                    printf("%s",curValue->cons->car->symbolValue);
-                    break;
-                case openType:
-                    //if (withQuotes)
-                    printf("(");
-                    break;
-                case closeType:
-                    //if (withQuotes)
-                    printf(")");
-                    break;
-                case cellType:
-                    printList(curValue->cons->car);
-                    break;
-                case nullType:
-                    printf("()");
-                    break;
-                case closureType:
-                    printf("#<procedure");
-                    if (curValue->closureValue && curValue->closureValue->identifier!=NULL)
-                    {
-                        printf(":%s>",curValue->closureValue->identifier);
-                    }
-                    else
-                    {
-                        printf(">");
-                    }
-                    break;
-                case primitiveType:
-                    printf("#<procedure>");
-                    break;
-                case iteratorType:
-                    printf("iterator");
-                    break;
-                default:
-                    break;
-            }
+            printValue(curValue->cons->car);
 
             if (curValue->cons->cdr && curValue->cons->car)
             {
