@@ -15,7 +15,7 @@ when the function reverse the list it does not check if the current value's type
 Sometimes it's nullType or an undetermined type and that cause the crash. Know the function check it.
 
 List iterator
-(let myIterator (iterator list))
-hasNext(myIterator) : Boolean - Return true if there is a next value
-currentValue(myIterator) : Value - Return the current value pointed by the iterator
-nextValue(myIterator) : NULL - The iterator points to the next value
+(define myIterator (iterator list)) : Defines a new iterator
+(hasNext myIterator) : Boolean - Return true if there is a next value
+(current myIterator) : Value - Return the current value pointed by the iterator
+(next myIterator) : NULL - The iterator points to the next value
