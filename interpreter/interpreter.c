@@ -423,11 +423,7 @@ int variableCheck(Value* value)
 					strcmp(value->symbolValue,">")==0 ||
 					strcmp(value->symbolValue,"car")==0 ||
 					strcmp(value->symbolValue,"cdr")==0 ||
-					strcmp(value->symbolValue,"cons")==0 ||
-					strcmp(value->symbolValue,"iterator")==0 ||
-					strcmp(value->symbolValue,"hasnext")==0 ||
-					strcmp(value->symbolValue,"next")==0 ||
-					strcmp(value->symbolValue,"current")==0)
+					strcmp(value->symbolValue,"cons")==0)
 				{
 					return 0;
 				}
@@ -1377,12 +1373,6 @@ Environment *createTopFrame()
 	Value *null = (Value *)malloc(sizeof(Value));
 	null->type = nullType;
 	bind("null", null, frame);
-	/*** UPMC ***/
-	bind("iterator", makePrimitiveValue(iterator), frame);
-	bind("hasnext", makePrimitiveValue(hasnext), frame);
-	bind("next", makePrimitiveValue(next), frame);
-	bind("current", makePrimitiveValue(current), frame);
-	/*** UPMC-end ***/
 	return frame;
 }
 

@@ -995,6 +995,7 @@ void printList(Value* value)
         {
             printValue(curValue->cons->car);
         }
+        printf(")");
     }
     else
         printf("This is not a value\n");
