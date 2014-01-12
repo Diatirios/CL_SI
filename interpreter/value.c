@@ -898,12 +898,16 @@ Value *cons(Value *value, Environment *env)
     {
         carCopy = deepCopy(newCar);
         cdrCopy = deepCopy(newCdr);
-
+			Value* tmp = (Value *)malloc (sizeof(Value));
+			tmp->type = cellType;
+			tmp->cons = (ConsCell *)malloc(sizeof(ConsCell));
+			tmp->cons->car=cdrCopy;
+			tmp->cons->cdr=NULL;
         carCdr = (Value *)malloc (sizeof(Value));
         carCdr->type = cellType;
         carCdr->cons = (ConsCell *)malloc(sizeof(ConsCell));
         carCdr->cons->car = carCopy;
-        carCdr->cons->cdr = cdrCopy;
+        carCdr->cons->cdr = tmp;
     }
     else if (newCdr->type == nullType)
     {
