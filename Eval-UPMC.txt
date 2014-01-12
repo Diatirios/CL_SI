@@ -1,4 +1,9 @@
+AllanMottier
+David Lecoconnier
+
 The interpreter is in the interpreter directory. A makefile is present in the directory.
+
+All indentation has been corrected to improve lisibility and all warnings present in the interpreter source code has been fixed.
 
 Bug 1:
 The main bug is processed during a list reversing (reverse, value.c).
